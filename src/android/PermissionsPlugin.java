@@ -3,6 +3,7 @@ package custom.cordova.permissions;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -17,7 +18,7 @@ import org.json.JSONException;
  * Created by CrazyDong on 2017/11/2.
  *android6.0以上添加权限插件
  */
-public class PermissionsPlugin extends CordovaPlugin {
+public class PermissionsPlugin extends CordovaPlugin implements ActivityCompat.OnRequestPermissionsResultCallback {
   private CallbackContext mCallbackContext;
   private int requestCode = 201711;
   @Override
@@ -88,6 +89,17 @@ public class PermissionsPlugin extends CordovaPlugin {
   @Override
   public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
     super.onRequestPermissionResult(requestCode, permissions, grantResults);
+    if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+      //用户允许
+      mCallbackContext.success("allow");
+    }else {
+      mCallbackContext.error("reject");
+//       Toast.makeText(cordova.getActivity(),"您已决绝",Toast.LENGTH_SHORT).show();
+    }
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
       //用户允许
       mCallbackContext.success("allow");
