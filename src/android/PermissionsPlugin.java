@@ -85,19 +85,6 @@ public class PermissionsPlugin extends CordovaPlugin implements ActivityCompat.O
 
 
   /*用户操作后回调*/
-
-  @Override
-  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
-    super.onRequestPermissionResult(requestCode, permissions, grantResults);
-    if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-      //用户允许
-      mCallbackContext.success("allow");
-    }else {
-      mCallbackContext.error("reject");
-//       Toast.makeText(cordova.getActivity(),"您已决绝",Toast.LENGTH_SHORT).show();
-    }
-  }
-
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
