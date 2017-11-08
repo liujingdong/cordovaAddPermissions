@@ -1,0 +1,21 @@
+{
+  "name": "crazy-dong-plugin-permissions",
+  "version": "1.0.0",
+  "description": "scan_qr",
+  "cordova": {
+	"id":"org.cordova.PermissionsPlugin",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liujingdong/cordovaAddPermissions.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "liujingdong",
+  "license": "ISC"
+}
