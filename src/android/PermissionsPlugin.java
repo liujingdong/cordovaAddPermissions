@@ -90,8 +90,10 @@ public class PermissionsPlugin extends CordovaPlugin {
     super.onRequestPermissionResult(requestCode, permissions, grantResults);
     if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
       //用户允许
+      mCallbackContext.success("allow");
     }else {
-      Toast.makeText(cordova.getActivity(),"您已决绝",Toast.LENGTH_SHORT).show();
+      mCallbackContext.error("reject");
+//       Toast.makeText(cordova.getActivity(),"您已决绝",Toast.LENGTH_SHORT).show();
     }
   }
 }
