@@ -1,7 +1,10 @@
 package custom.cordova.permissions;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +16,11 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Collections;
+import java.util.Enumeration;
 
 /**
  * Created by CrazyDong on 2017/11/2.
@@ -34,9 +42,49 @@ public class PermissionsPlugin extends CordovaPlugin implements ActivityCompat.O
       checkPermission(preArr);
 
       return true;
+    }else if(action.equals("VPN")){
+      isVpnUsed();
     }
     return false;
   }
+
+  /*判断VPN方法*/
+  public void isVpnUsed() {
+    boolean isVpn = false;
+    //检查网络是否链接
+    ConnectivityManager connectivityManager = (ConnectivityManager) cordova.getActivity()
+                                              .getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+    //判断时候有网络
+    if(networkInfo != null){
+        try {
+          Enumeration<NetworkInterface> niList = NetworkInterface.getNetworkInterfaces();
+          if(niList != null) {
+            for (NetworkInterface intf : Collections.list(niList)) {
+              if(!intf.isUp() || intf.getInterfaceAddresses().size() == 0) {
+                continue;
+              }
+              if ("tun0".equals(intf.getName()) || "ppp0".equals(intf.getName())){
+                isVpn = true;
+                mCallbackContext.success("VPN_OK");
+              }
+            }
+
+            if(!isVpn){
+              mCallbackContext.success(networkInfo.getTypeName());//返回网络类型
+            }
+
+          }
+        } catch (Throwable e) {
+          mCallbackContext.error("err");
+        }
+
+      }else{
+        mCallbackContext.error("null_network");
+    }
+
+  }
+
 
   /**
    * 检测权限
