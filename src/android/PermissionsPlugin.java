@@ -2,12 +2,17 @@ package custom.cordova.permissions;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -44,8 +49,34 @@ public class PermissionsPlugin extends CordovaPlugin implements ActivityCompat.O
       return true;
     }else if(action.equals("VPN")){
       isVpnUsed();
+    }else if(action.equals("isNotificationEnabled")){//判断是否打开通知状态栏
+      if(isNotificationEnabled()){
+        mCallbackContext.success("opened");//打开状态
+      }else{
+        mCallbackContext.success("closed");//关闭状态
+      }
+      return true;
+    }else if(action.equals("notificationSet")){//设置通知状态栏
+      notificationSet();
+      return true;
     }
     return false;
+  }
+
+  //设置通知和状态栏
+  private void notificationSet() {
+    // 进入设置系统应用权限界面
+    Intent intent = new Intent();
+    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    intent.setData(Uri.fromParts("package", cordova.getActivity().getPackageName(), null));
+    cordova.getActivity().startActivity(intent);
+  }
+
+  //判断通知状态栏是否打开
+  private boolean isNotificationEnabled() {
+    NotificationManagerCompat manger = NotificationManagerCompat.from(cordova.getActivity());
+    boolean isOpende = manger.areNotificationsEnabled();
+    return isOpende;
   }
 
   /*判断VPN方法*/

@@ -23,5 +23,17 @@ PermissionsPlugin.addPermissions("VPN",function (result) {
           //失败的回调
               alert("错误了" + err);
           },null);
+		  
+		  
+功能三 判断应用是否打开通知状态栏
+ PermissionsPlugin.addPermissions("isNotificationEnabled", function (result) {
+                        if(result == "opened"){//通知状态打开
+
+                        }else if(result == "closed"){//通知状态关闭
+
+                    }, null, null);
+
+功能四 进入设置系统应用权限界面
+PermissionsPlugin.addPermissions("notificationSet",null,null,null);
 ---
 
