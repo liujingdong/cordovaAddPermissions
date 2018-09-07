@@ -22,6 +22,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.File;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
@@ -59,8 +60,31 @@ public class PermissionsPlugin extends CordovaPlugin implements ActivityCompat.O
     }else if(action.equals("notificationSet")){//设置通知状态栏
       notificationSet();
       return true;
+    }else if(action.equals("openPDF")){
+      openPdf(args.getString(0));
+      return true;
+    }else if(action.equals("LevelAPI")){
+      getLevelAPI();
+      return true;
     }
     return false;
+  }
+
+  //获取API level
+  private void getLevelAPI() {
+    int lever = Build.VERSION.SDK_INT;
+    mCallbackContext.success(lever);
+  }
+
+  //打开PDF的方法
+  private void openPdf(String path) {
+    Intent intent = new Intent("android.intent.action.VIEW");
+    intent.addCategory("android.intent.category.DEFAULT");
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    Uri uri = Uri.fromFile(new File(path));
+    intent.setDataAndType(uri,"application/pdf");
+    mCallbackContext.success();
+    cordova.getActivity().startActivity(intent);
   }
 
   //设置通知和状态栏
